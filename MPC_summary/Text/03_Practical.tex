@@ -26,7 +26,7 @@ Practical Issues \textbf{Tracking}, \textbf{Disturbance rejection} and \textbf{F
 \end{itemize}
 \begin{gather*}
     \mathrm{min} \sum^{N-1}_{i=0} \Delta x_i^T Q \Delta x_i + \Delta u_i^TR \Delta u_i^T R \Delta u_i + V_f (\Delta x_N)\\
-    \mathrm{s.t.} \Delta x_0 = \Detla x(k)\\
+    \mathrm{s.t.} \Delta x_0 = \Delta x(k)\\
     \Delta x_{i+1}= A \Delta x(k)\\
     G_x\Delta x_i \leq h_x -G_xx_s \\ 
     G_u \Delta u_i \leq h_u -G_u u_s \\
@@ -93,7 +93,7 @@ Intuition: At steady-state $b\begin{bmatrix} +-I & B_d \\ C & C_d \end{bmatrix} 
 
 \begin{minipage}[]{0.49\linewidth}
 \textbf{Requirement on $\mathbf{I_\epsilon(\epsilon)}$}
-if the original problem has a feasible solution $z^*$, then the softend problem should have the same solution $z^*$, and $\epsilon = 0$.
+if the original problem has a feasible solution $z^*$, then the softend problem should have the same solution $z^*$, and $\epsilon = 0$.\\
 \textbf{NOTE:} $I_\epsilon(\epsilon) = s \cdot \epsilon$ does not meet this requirement for any $s > 0$ \\
 \end{minipage}
 \begin{minipage}[]{0.49\linewidth}

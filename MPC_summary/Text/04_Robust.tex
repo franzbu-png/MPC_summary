@@ -34,5 +34,42 @@ Design control law $u(k)= \mathcal{K}(x(k))$ such that the system:
          \hspace*{8mm}\textbf{end if}\\
          \hspace*{5mm}\textbf{end loop}\\
     \textbf{NOTE:} This is the same as for the nominal case, just $\mathrm{pre}(\Omega)$ replaced by $\mathrm{pre}^\mathcal{W}(\Omega)$
-         
-        
+    \subsubsection{Robust Constraint Satisfaction}
+    \begin{minipage}{0.22\linewidth}
+        \begin{align*}
+        \begin{rcases}
+            \Phi_{i+1} &= A\Phi_i+Bu_i + w_i\\
+            u_i &\in \mathcal{U}\\
+            \Phi_i &\in \mathcal{X}\hspace{2mm}\forall W \in \mathcal{W}^N
+        \end{rcases}
+        \end{align*}
+    \end{minipage}
+    \begin{minipage}{0.6\linewidth}
+         \begin{itemize}
+             \item $i=0,\dots,N-1$
+             \item Optimize over control action$\{u_0,\dots,u_{N-1}\}$
+             \item Enforce constraints explicitly by imposing $\Phi_i\in\mathcal{X}$ and $u_i\in \mathcal{U}\forall$ sequences$W$.
+         \end{itemize}
+    \end{minipage}
+    
+     \begin{minipage}{0.22\linewidth}
+        \begin{align*}
+        \begin{rcases}
+            \Phi_N &\in \mathcal{X}_f\\
+            \Phi_{i+1} &= (A+BK)\Phi _i+w_i
+        \end{rcases}
+        \end{align*}
+    \end{minipage}
+    \begin{minipage}{0.6\linewidth}
+         \begin{itemize}
+             \item $i=N,\dots$
+             \item Assume control law to be linear $u_i=K\Phi_i$
+             \item Enforce constraints implicitly by imposing $\Phi_N$ to be in a robust invariant set $\mathcal{X}_\subseteq \mathcal{X}$ and $K\mathcal{X}_f \subseteq\mathcal{U}$ for the system $\Phi_{i+1} = (A+BK)\Phi_i+w_i$.
+         \end{itemize}
+    \end{minipage}
+    \subsection{Minkowski Sum and pontryagin Difference}
+    \textbf{Minkowski Sum:} Let $A$ and $B\subset\mathbb{R}^n$. 
+    \[A\oplus B := \{x+y | x \in A,y\in B\}\]
+    \textbf{Pontryagin Difference:} Let $A$ and $B\subset\mathbb{R}^n$. 
+     \[A\ominus B := \{x|x+e\in A \hspace{3mm}\forall e \in B\}\]
+     \includegraphics[width=0.9\linewidth]{MPC_summary/Images/PontryaginDiff.jpg}
