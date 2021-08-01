@@ -99,6 +99,15 @@ if the original problem has a feasible solution $z^*$, then the softend problem 
 \begin{minipage}[]{0.49\linewidth}
 \includegraphics[width= 0.99\linewidth]{MPC_summary/Images/Quadratic_penalty.jpg}
 \end{minipage}
+\subsubsection{Tuning of Penalty Function}
+\begin{itemize}
+    \item \textbf{Quadratic:} Increase $S$: hardening of soft constr. $\rightarrow$ reduced size and longer duration.
+    \item \textbf{Linear: }Increase $v$ results in increasing peak violation and decreasing duration.
+    \begin{itemize}
+        \item If weight $v$ is chosen large enough, constraints are satisfied if possible
+        \item Large linear penalties make tuning difficult and cause numerical problems
+    \end{itemize}
+\end{itemize}
 \subsubsection{Simplification: Separation of Objectives}
 \begin{minipage}{0.49\linewidth}
 1. Minimize violation over horizon

@@ -1,5 +1,13 @@
 \section{general stuff about CT}
 \subsection{Lyapunov function}
+Consider the equilibrium point $\Bar{x}=0$ and $\Omega\subset \mathbb{R}^n$ a closed and bounded set containing the origin. \textbf{Lyapunov Function} $V:\mathbb{R}^n \rightarrow \mathbb{R}$, continues at the origin s.t: $V(0) = 0 |V(x)>0 , \forall x \in \Omega\setminus\{0\}|V(g(x))- V(x)\leq -\alpha(x)\forall x\in \Omega,\alpha > 0$ 
+\subsubsection{Lyapunov Theorem - asymptotic stability}
+If system admits a Lyapunov function $V(x)$ then $x = 0$ is \textbf{asymptotically stable} for $\alpha(x)$ positiv definite. For $\alpha(x)$ positive semidefinit, $x=0$ is only stable.
+\subsubsection{Lyapunov Theorem - Global stability}
+if system admits a Lyapunov function $V(x)$ for $\Omega = \mathbb{R}^n$ and additionally $||x|| \rightarrow \infty \Rightarrow V(x) \rightarrow\infty$, then x = 0 is \textbf{globally asymptotically stable.}
+\subsubsection{Lyapunov indirect method}
+Let $A = \frac{dg}{dx^T}{\Big|}_{x=0}$ be the linearized matrix of the nonlinear system around $\Bar{x}=0$\\
+Then the rigin is \textbf{locally asympotitcally stable} if $|\lambda_i|<1$ for all eigenvalues of $A$. if there is at least one $|\lambda_i|>1$, the origin is \textbf{unstable}. if there is at least one $|\lambda_i|=1$, we cannot say anything about stability $\rightarrow$ build Lyapunov function.
 \subsubsection{Idea}
  A mechanical system is asymptotically stable, if the total mechanical energy is decreasing over time (friction losses). A \textbf{Lyapunov function} is a system theoretic generalization of energy
 \section{Introduction to MPC} 
@@ -110,13 +118,17 @@ to get a \textbf{constant linear controller} from unconstrained system. system g
 \subsection{Convex Sets}
 A set $\mathcal{X}$ is convex iff for any pair of points $x$ and $y$ in $\mathcal{X}$ can be connected by a line which is always inside the set.
 \textbf{mathematical:} \[\lambda x + (1-\lambda) y\in \mathcal{X}, \hspace{4mm} \forall \lambda\in [0,1], \hspace{4mm} \forall x,y \in \mathcal{X} \]
-
+\begin{center}
+    \includegraphics[width= 0.6\linewidth]{MPC_summary/Images/Convex_Non_Convex.jpg}
+\end{center}
 \subsubsection{Hyperplanes and Halfspaces}
 \begin{itemize}
     \item \textbf{Hyperplane} is defined by $\{x\in\mathbb{R}^n| a^Tx = b \}$ for $a \neq 0$ where $a \in \mathcal{R}^n$ is the normal vector to the hyperplane. It is affine and convex.
     \item \textbf{Halfspace} is everything on one side aof a hyperplane $\{x \in \mathbb{R}^n | a^T x \leq b\}$. it can be \textbf{open} (strict inequality) or \textbf{closed} (non-strict inequality). It is convex.
 \end{itemize}
-
+\begin{center}
+    \includegraphics[width= 0.6\linewidth]{MPC_summary/Images/hyperplane_halfspaces.jpg}
+\end{center}
 \subsubsection{Polyhedra and Polytopes \tiny{(both convex)}}
 \begin{itemize}
     \item \textbf{Polyhedron} $:= N \cap$ of closed Halfspaces with $N \in \mathcal{N}$  
