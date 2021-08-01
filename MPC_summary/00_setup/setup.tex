@@ -1,0 +1,127 @@
+\documentclass[a4paper, 8pt]{extarticle}
+\setcounter{page}{0}
+\renewcommand{\baselinestretch}{0.95} %spacing between lines
+\usepackage[T1]{fontenc}
+\usepackage[scaled=0.9]{helvet}
+\renewcommand{\familydefault}{\sfdefault}
+\usepackage[landscape]{geometry}
+\geometry{
+     %total={210mm,297mm},
+     left=6.7mm,
+     right=6.7mm,
+     top=4.8mm,
+     bottom=7.55mm,
+ }
+\usepackage[utf8]{inputenc}
+\usepackage[normalem]{ulem}
+\usepackage{xcolor}
+\usepackage{amssymb}
+\usepackage{amsmath}
+\usepackage{amsfonts}
+\usepackage{mathtools}
+\usepackage{multicol} %multiple columns
+\usepackage{wrapfig} %wrap text around figures
+%get rid of spacing between lists
+\usepackage{enumitem} 
+    \setlist{nolistsep}
+%imagepackage
+\usepackage{graphicx} 
+    \graphicspath{ {./images/} }
+
+\usepackage{parskip} %Einzug aus, Absatzabstand ein
+    \tolerance=2000 %Toleranz für Wortzwischenräume
+    \setlength{\emergencystretch}{20pt} %Zusätzliche Zeilendehnbarkeit in Notfällen
+    \setlength\parindent{0pt}
+    \setlength{\columnseprule}{1px} %thickness of column seperator
+
+%New Titles
+\usepackage{tcolorbox}
+    \definecolor{seccol}{HTML}{FF9A00}
+    \definecolor{subseccol}{HTML}{3EC1D3}
+    \definecolor{subsubseccol}{RGB}{255, 255, 255}
+    
+\definecolor{sectext}{HTML}{F6F7D7}
+
+\usepackage{nicefrac}
+\usepackage{subcaption}
+\usepackage{verbatim} % multiline comments
+\usepackage{booktabs} % toprule, midrule
+\usepackage[colorlinks=true, urlcolor=black, linkcolor=black, citecolor=black, filecolor=black]{hyperref}
+\usepackage{array}
+\usepackage{siunitx}
+
+% Section
+\renewcommand{\section}[1]{
+	\begin{tcolorbox}[
+			arc=0mm,
+			colback=seccol,
+			colframe=white,
+			bottomrule = 0 mm,
+			toprule = 0 mm,
+			leftrule = 0 mm,
+			rightrule = 0 mm,
+			valign=center,
+			left=0.5mm,
+			top= 0.2 mm,
+			bottom= 0.2 mm,
+			fontupper=\color{sectext},
+			before skip = 2mm,
+			leftright skip = -0.5mm,
+			after skip = 2 mm]
+
+		\small \textbf{#1}
+	\end{tcolorbox}
+}
+	
+% Subsection	
+\renewcommand{\subsection}[1]{
+	\begin{tcolorbox}[
+			arc=0mm,
+			colback=subseccol,
+			colframe=white,
+			bottomrule = 0 mm,
+			toprule = 0 mm,
+			leftrule = 0 mm,
+			rightrule = 0 mm,
+			valign=center,
+			left=0.5mm,
+			top=0.2mm,
+			bottom=0.2mm,
+			fontupper=\color{sectext},
+			before skip = 0.5mm,
+			leftright skip = -0.5mm,
+			after skip = 0.5 mm]
+			
+		\footnotesize \textbf{#1:}
+	\end{tcolorbox}
+}
+	
+% Subsubsection	
+\renewcommand{\subsubsection}[1]{
+	\begin{tcolorbox}[
+			arc=0mm,
+			colback=sectext,
+			colframe=white,
+			bottomrule = 0 mm,
+			toprule = 0 mm,
+			leftrule = 0 mm,
+			rightrule = 0 mm,
+			valign=center,
+			left=0.5mm,
+			top=-0.2mm,
+			bottom=-0.2mm,
+			fontupper=\color{subseccol},
+			before skip = 0.5mm,
+			leftright skip = -0.5mm,
+			after skip = 0.5 mm]
+			
+		\footnotesize \textbf{#1:}
+	\end{tcolorbox}
+}
+
+%TODO command    
+\newcommand{\TODO}[1]{\large\textcolor{red}{\textbf{TODO: #1\\}}\normalsize}
+    
+\title{MPC summary}
+\author{Franz Bühlmann}
+\date{}

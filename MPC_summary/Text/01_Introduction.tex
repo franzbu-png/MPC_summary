@@ -1,0 +1,230 @@
+\section{general stuff about CT}
+\subsection{Lyapunov function}
+\subsubsection{Idea}
+ A mechanical system is asymptotically stable, if the total mechanical energy is decreasing over time (friction losses). A \textbf{Lyapunov function} is a system theoretic generalization of energy
+\section{Introduction to MPC} 
+\subsection{Unconstraint Finite Horizon Control Problem}
+\textbf{Goal:} Find a sequence of inputs $U:=[u_0^T,\dots,u_{N-1}^T]^T$ that minimizes the objective function
+\begin{itemize}
+    \item P $\succeq$ 0, with $P=P^T$, is the \textbf{terminal weight}
+    \item Q $\succeq$ 0, with $Q=Q^T$, is the \textbf{state} weight
+    \item R $\succ$ 0. with $R=R^T$, is the \textbf{input} weight
+    \item $N$ is the horizon length
+    \item Note that $x(0)$ is the current state, whereas $x_0,\dots,X_N$ and $u_0,\dots,un_{N-1}$ are \textbf{optimization variables} that are constraint
+\end{itemize}
+
+\begin{gather*}
+    J^*(x(0)) := \underset{U}{\textrm{min }}x_N^TPx_N+\sum^{N-1}_{i=0}(x_i^TQx_i+u_i^TRu_i)\\
+    \textrm{subj. to }x_{i+1}=Ax_i+Bu_i\textrm{, } i = 0,\dots,N-1\\
+    x_0 = x(0)
+\end{gather*}
+
+\subsection{Batch Approach}
+\begin{itemize}
+    \item Explicitly represents all future states $x_i$ in terms of initial condition $x_0$ and inputs $u_0,\dots, u_{N-1}$
+    \item subsidising every $x_N$ by $x_0$ terms gives:
+    \begin{align*}
+        \begin{bmatrix}
+            x_0     \\
+            x_1     \\
+            \vdots  \\
+            \vdots  \\
+            x_N
+        \end{bmatrix} 
+        =
+        \begin{bmatrix}
+            I \\
+            A\\
+            \vdots\\
+            \vdots\\
+            A^N
+        \end{bmatrix} x(0) +
+        \begin{bmatrix}
+            0 & \dots & \dots & 0 \\
+            B & 0 &\dots & 0\\
+            AB & B & \dots & 0 \\
+            \vdots & \ddots &\ddots & 0 \\ 
+            A^{N-1}B & \dots & AB & B
+        \end{bmatrix}
+        \begin{bmatrix}
+            u_0 \\
+            u_1 \\
+            \vdots \\
+            \vdots \\
+            u_{N-1}
+        \end{bmatrix}
+    \end{align*}
+     due to: $x_0 = x(0)$, $x_1 = Ax(0) + Bu(0)$ and so on
+     \item the equation can be represented as \[X:=\mathcal{S}^xx(0) + \mathcal{S}^u U\]
+\end{itemize}
+\begin{itemize}
+    \item it expresses the cost function in terms of $x(0)$ and $U$ by eliminating the states $x_i$.
+    \item since $J(x(0),U)$ is a pos. def. quad. $f$ of $U$, its minimizer $U^*$ is unique and can be found by setting $\nabla_u J(x(0),U) = 0$ this yields the optimal input sequence $U^*$ as a linear function of the initial state $x(0)$: 
+    \[U^*(x(0)) = - ((\mathcal{S}^u)^T\Bar{Q} \mathcal{S}^u + \Bar{R})^{-1}(\mathcal{S}^u)^T\Bar{Q}\mathcal{S}^xx(0)\]
+    \item by back substitution we obtain:
+\end{itemize}
+\small\begin{align*}
+    &J^*(x(0)) = \\ &x(0)^T \Big( (\mathcal{S}^x)^T\Bar{Q}\mathcal{S}^x-(\mathcal{S}^x)^T\Bar{Q}\mathcal{S}^u\big((\mathcal{S}^u)^T\Bar{Q}\mathcal{S}^u+\Bar{R}\big)^{-1}(\mathcal{S}^u)^T\Bar{Q}\mathcal{S}^x\Big)x(0)
+    \end{align*}
+    
+\subsection{Recursive Approach}
+    \begin{enumerate}
+        \item Consider $j$- step problem at time $N-j$:
+        \[
+        J_{N-j}^*(x_{N-j}) = \underset{U_{N-j}}{min}x^T_NP_Nx_N + \sum^{N-1}_{i=N-j}(x_iQx_i+u_i^TRu_i)\]
+        \[\textrm{s.th:\hspace{3mm}} x_{i+1} =Ax_i+Bu_i, \hspace{3mm}i = [N-j, \dots, N-1 ],\hspace{3mm} \mathbf{P_N = P} \]
+        \item Substituiting equation for $x_{N-j}$ into $J^*_{N-j}$ and setting $\nabla_uJ^*_{N-j} = 0$ leads to
+        {\tiny\[\mathbf{U^*_{N-j} = -(B^TP_{N-j+1}B+R)^{-1}B^TP_{N-j+1}Ax_{N-j}=F_{N-j}x_{N-j}}\]}
+        \item optimal cost-to-go $J^*_{N-j}(x_{N-j})=x_{N-j}^TP_{N-j}x_{N-j}$
+        \item Every $P_j$ is related to $P_{j+1}$ by the \textbf{Riccati Difference Equation (RDE)}
+    \end{enumerate}
+        {\tiny\[P_{N-j}=A^TP_{N-j+1}A + Q - A^TP_{N-j+1}B(B^TP_{N-j+1}B+R)^{-1} B^TP_{N-j+1} A\]}
+\subsection{Receding Horizon Control}
+to get a \textbf{constant linear controller} from unconstrained system. system gets more stable the longer the Horizon
+\begin{center}
+\includegraphics[width = 0.7\linewidth]{MPC_summary/Images/Screenshot 2021-07-31 170253.jpg}
+\end{center}
+\subsection{Mathematical Optimization Problem}
+\begin{gather*}
+ \underset{x\in \mathrm{dom}(f)}{\mathrm{min}} f(x)\\
+ \mathrm{subj. \hspace{2mm} to. \hspace{2mm} g_i(x) \leq 0 \hspace{2mm} i = 1.,\dots,m}\\
+ h_i(x) = 0 \hspace{2mm} i = 1,\dots , p
+\end{gather*}
+\begin{itemize}
+    \item \textbf{Optimization variables} $x:= [x_1, x_2,\dots, x_n]^T]$
+    \item \textbf{Objective function:} $f \mathrm{dom}(f) \rightarrow \mathbb{R}$
+    \item \textbf{Domain} $\mathrm{dom}(f) \subseteq \mathbb{R}^n$ of the objective $f$
+    \item \textbf{Optional inequality} constraint functions \[g_i : \mathbb{R}^n \rightarrow \mathbb{R}, \textrm{for } i =1,\dots,m\]
+    \item \textbf{Optional equality} constraint functions \[h_i: \mathbb{R}n \rightarrow \mathbb{R}, \textrm{for } i = 1,\dots, p\]
+    \item  \textbf{Feasible set:}\begin{gather*}\mathcal{X} := \{x\in \textrm{dom}(f) | g_i(x) \leq 0,i=1,\dots,m, h_i(x)=0, i =1,\dots,p \} \end{gather*}
+   
+\end{itemize}
+\subsection{Convex Optimization}
+\begin{itemize}
+    \item \textbf{Local Optimum:} $x \in \mathcal{X}$ satisfies: $y \in \mathcal{X}. ||y-x|| \leq R \Rightarrow f(y) \geq f(x)$
+    \item \textbf{Global Optimum:} $x \in \mathcal{X}$ for some $R > 0: y \in \mathcal{X}. \Rightarrow f(y) \geq f(x)$ 
+    \item \textbf{Unbounded:} if $p^* = -\infty$
+    \item \textbf{Infeasible:} $\mathcal{X}$ empty $\Leftrightarrow p^* = \infty$
+    \item \textbf{Unconstrained:} $\mathcal{X} = \mathbb{R}^n$
+\end{itemize}
+\subsection{Convex Sets}
+A set $\mathcal{X}$ is convex iff for any pair of points $x$ and $y$ in $\mathcal{X}$ can be connected by a line which is always inside the set.
+\textbf{mathematical:} \[\lambda x + (1-\lambda) y\in \mathcal{X}, \hspace{4mm} \forall \lambda\in [0,1], \hspace{4mm} \forall x,y \in \mathcal{X} \]
+
+\subsubsection{Hyperplanes and Halfspaces}
+\begin{itemize}
+    \item \textbf{Hyperplane} is defined by $\{x\in\mathbb{R}^n| a^Tx = b \}$ for $a \neq 0$ where $a \in \mathcal{R}^n$ is the normal vector to the hyperplane. It is affine and convex.
+    \item \textbf{Halfspace} is everything on one side aof a hyperplane $\{x \in \mathbb{R}^n | a^T x \leq b\}$. it can be \textbf{open} (strict inequality) or \textbf{closed} (non-strict inequality). It is convex.
+\end{itemize}
+
+\subsubsection{Polyhedra and Polytopes \tiny{(both convex)}}
+\begin{itemize}
+    \item \textbf{Polyhedron} $:= N \cap$ of closed Halfspaces with $N \in \mathcal{N}$  
+    \begin{gather*}P := \{x|a^T_i x \leq b_i,i=1, \dots n\} = \{x|Ax \leq b\}\\
+    A := [a_1, \dots a_m]^T,\hspace{3mm} b := [b_1,\dots,b_m]^T
+    \end{gather*}
+    \item \textbf{Polytope} is a bounded Polyhedron
+\end{itemize}
+\subsubsection{Ellipsoids}
+\begin{itemize}
+    \item $\{x|(x-x_c)^T A^{-1}(x-x_c) \leq 1\}$ with  $A\succ 0$ pos. def. and symmetric
+\end{itemize}
+\subsubsection{Norm Balls}
+\begin{itemize}
+    \item defined by $\{x|||x-x_c|| \leq r\}$
+    \item it is always convex for any norm. 
+    \[l_1: ||x||_1 = \Sigma_i|x_i| \hspace{4mm} l_2: ||x||_2 = \sqrt{\Sigma_ix_i^2} \hspace{4mm} l_\infty = \underset{i}{max}|x_i|\]
+\end{itemize}
+\subsubsection{Note}
+\begin{itemize}
+    \item \textbf{intersection} of any convex sets is itself a convex set.
+    \item \textbf{union} of two convex sets does not have to be convex.
+\end{itemize}
+
+\subsection{Optimality Conditions}
+\subsubsection{Lagrange dual problem}
+\textbf{Lagrangian function}
+    $\mathbf{L \hspace{2mm}}\mathrm{dom}(f) \times \mathbb{R}^m \times \mathbb{R}^p \rightarrow \mathbb{R}$
+\begin{gather*}
+    L(x,\lambda,\nu) = f(x) + \sum^m_{i=1} \lambda_i g_i(x)+\sum^p_{i=1}\nu_ih(x)
+\end{gather*}
+\textbf{Dual function $\mathbf{d}$}
+\begin{gather*}
+    \mathbf{d}: \mathbb{R}^m\times \mathbb{R}^p: \hspace{5mm} d(\lambda,\nu) = \underset{x\in\mathrm{dom}(f)}{\mathrm{inf}}L(x,\lambda,\nu)
+\end{gather*}
+\textbf{NOTE}
+\begin{itemize}
+    \item dual function is always a \textbf{concave} function
+    \item Gradient condition can not be used for a discrete set
+\end{itemize}
+\subsubsection{weak and strong duality}
+\textbf{weak}
+\begin{itemize}
+    \item it is \textbf{always} true that $d^*\leq p^*$
+\end{itemize}
+\textbf{strong}
+\begin{itemize}
+    \item it is \textbf{sometimes} true that $d^* = p^*$
+    \item Strong duality usually does not hold for non-convex problems.
+    \item Can impose conditions on convex problems to guarantee that $d^*= p^*$
+    \item Sometimes the dual is much easier to solve than the primal (or vice-versa)
+    \item Example: The dual of a mixed integer linear program (difficult to solve) is
+a standard LP (easy to solve).
+\textcolor{red}{understand this!}
+\end{itemize}
+\subsubsection{Slater condition}
+if $\exists$ \textbf{striclty feasible point} ie.\[ \{ x|Ax= b, g_i(x) < 0 \forall i \in \{1,\dots,m\}\}\neq \emptyset\]
+\subsubsection{KKT-Condition}
+Assume that $f$, all $g_i$ and $h_i$ are differentiable.
+\begin{enumerate}
+    \item \textbf{Primal Feasibility:} \begin{gather*}
+        g_i(x^*)\leq 0 \hspace{5mm} i = 1,\dots , m\\
+        h_i(x^*) = 0 \hspace{5mm} i = 1,\dots, p
+    \end{gather*}
+    \item \textbf{Dual Feasibility:}
+    \begin{gather*}
+        \lambda^* \geq 0
+    \end{gather*}
+    \item\textbf{Complementary Slackness:}
+    \begin{gather*}
+        \lambda^*_ig_i(x^*) = 0 i = 1,\dots , m 
+    \end{gather*}
+    \item \textbf{stationarity:}
+    \begin{gather*}
+        \nabla_xL(x^*, \lambda^*, \nu^*) = \nabla f(x^*) + \sum ^m_{i=1} \lambda_i^*\nabla g_i(x^*)+ \sum^p_{i=1} \nu_i^*\nabla h_i (x^*) = 0
+    \end{gather*}
+\end{enumerate}
+\subsection{Classical design vs MPC}
+\begin{center}
+\begin{tabular}{|c|c|}
+     \hline
+    \textbf{Classical} & \textbf{MPC} \\
+    \hline
+    Disturbance rejection (d$\rightarrow$ y) & Control constraints (limits)
+    \\
+    \hline
+    Noise insensitivity (n $\rightarrow$ y & Process constraints (safety) \\
+    \hline
+    usually in \textbf{frequency domain} & usually in \textbf{time domain} \\ \hline
+    Model uncertainty & Model \textbf{predictive} Control\\ \hline
+\end{tabular}
+\end{center}
+predictive Control allows to \begin{itemize}
+    \item include constraint in design
+    \item set optimal setpoint
+    \item operate plant optimal
+\end{itemize}
+
+\subsection{MPC: Mathematical Formulation}
+\begin{gather*}
+    U^*_k(x(k)) := \underset{U_k}{\mathrm{argmin}}\sum^{N-1}_{i=0}I(x_{k+1},u_{k+1}) \\
+    \textrm{subj. to } x_k = x(k) \textrm{ measurement} \\
+    x_{k+i+1}= Ax_{k+i}+ Bu_{k+i} \textrm{ system model}
+    \\
+    x_{k+1} \in \mathcal{X} \textrm{ state constraints}\\
+    u_{k+1} \in \mathcal{U} \textrm{ input constraints}\\
+    U_k = \{u_k,u_{k+1}, \dots, u_{k+N-1}\} \textrm{ optimisation variables}
+    \end{gather*}
+
+
+

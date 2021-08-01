@@ -1,0 +1,33 @@
+\input{00_setup/setup.tex}
+
+\setlength{\parindent}{0cm} % remove indentation
+
+\renewcommand{\vec}[1]{\boldsymbol{#1}}
+
+\newcommand{\prscal}[2]{\left< #1, #2 \right>}
+
+\newcommand{\algorithm}[2]{\vspace{1mm} \hrule \vspace{1mm} #1 \vspace{1mm}\hrule \vspace{1mm} \noindent #2 \vspace{1mm} \hrule \vspace{1mm}}
+
+
+\newenvironment{Figure}
+  {\par\medskip\noindent\minipage{\linewidth}}
+  {\endminipage\par\medskip}
+
+\providecommand{\tabularnewline}{\\}
+
+
+\begin{document}
+\graphicspath{{Pictures/}}
+
+\begin{multicols*}{3}
+\setlength\columnseprule{0.4pt}
+
+\input{MPC_summary/Text/01_Introduction}
+\input{MPC_summary/Text/02_Nominal}
+\input{MPC_summary/Text/03_Practical}
+\input{MPC_summary/Text/04_Robust}
+\input{MPC_summary/Text/05_Implementation}
+
+
+\end{multicols*}
+\end{document}
