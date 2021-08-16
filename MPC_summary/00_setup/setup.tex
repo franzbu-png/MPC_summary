@@ -1,16 +1,17 @@
-\documentclass[a4paper, 8pt]{extarticle}
+\documentclass[a4paper]{extarticle}
 \setcounter{page}{0}
 \renewcommand{\baselinestretch}{0.95} %spacing between lines
+\usepackage[fontsize=4pt]{fontsize}
 \usepackage[T1]{fontenc}
-\usepackage[scaled=0.9]{helvet}
+\usepackage[scaled=1.5]{helvet}
 \renewcommand{\familydefault}{\sfdefault}
 \usepackage[landscape]{geometry}
 \geometry{
      %total={210mm,297mm},
-     left=6.7mm,
-     right=6.7mm,
-     top=4.8mm,
-     bottom=7.55mm,
+     left=3.0mm,
+     right=3.0mm,
+     top= 3.0mm,
+     bottom= 3.0mm,
  }
 \usepackage[utf8]{inputenc}
 \usepackage[normalem]{ulem}
@@ -18,12 +19,18 @@
 \usepackage{amssymb}
 \usepackage{amsmath}
 \usepackage{amsfonts}
+% \usepackage{fontspec}
+% \usepackage{unicode-math}
+% \setmainfont{TeX Gyre Pagella}
+% \setmathfont{Asana Math}
 \usepackage{mathtools}
 \usepackage{multicol} %multiple columns
 \usepackage{wrapfig} %wrap text around figures
 %get rid of spacing between lists
 \usepackage{enumitem} 
     \setlist{nolistsep}
+    \setlist[itemize]{leftmargin=3em}
+    \setlist[enumerate]{leftmargin=3em}
 %imagepackage
 \usepackage{graphicx} 
     \graphicspath{ {./images/} }
